@@ -1,17 +1,22 @@
 pipeline {
     agent any
 
-    tools {
-        maven 'Maven 3.9'
-    }
-
     stages {
-        stage('Checkout') {
+        stage('Check Tools') {
             steps {
-                echo 'Pulling source code...'
-                checkout scm
+                sh 'echo "Java version:"'
+                sh 'java -version'
+                sh 'echo "Maven version:"'
+                sh 'mvn -version'
             }
         }
+
+        stage('Checkout') {
+            steps {
+                git branch: 'main', url: 'https://github.com/trishaboda/devopsmavenapp.git'
+            }
+        }
+
         stage('Build') {
             steps {
                 echo 'Building project...'
@@ -20,16 +25,10 @@ pipeline {
                 }
             }
         }
-        stage('Docker Build') {
+
+        stage('Archive Artifact') {
             steps {
-                echo 'Building Docker image...'
-                bat 'docker build -t demo-app .'
-            }
-        }
-        stage('Docker Run') {
-            steps {
-                echo 'Running Docker container...'
-                bat 'docker run --rm demo-app'
+                archiveArtifacts artifacts: 'target/devopsmavenapp-1.0-SNAPSHOT.jar', fingerprint: true
             }
         }
     }
