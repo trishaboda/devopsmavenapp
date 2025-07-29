@@ -1,17 +1,13 @@
 pipeline {
     agent any
 
-    tools {
-        maven 'Maven 3.9.6'
-        jdk 'jdk21'
-    }
-
     stages {
         stage('Check Tools') {
             steps {
-                bat 'echo Checking Java and Maven versions...'
-                bat 'java -version'
-                bat 'mvn -version'
+                sh 'echo "Java version:"'
+                sh 'java -version'
+                sh 'echo "Maven version:"'
+                sh 'mvn -version'
             }
         }
 
