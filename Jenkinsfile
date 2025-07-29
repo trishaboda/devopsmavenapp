@@ -2,11 +2,19 @@ pipeline {
     agent any
 
     tools {
-        maven 'Maven 3.9.6'  // Make sure this matches the name in Jenkins Global Tools
-        jdk 'jdk21'        // Same for this — must match your configured JDK in Jenkins
+        maven 'Maven 3.9.6'
+        jdk 'jdk21'
     }
 
     stages {
+        stage('Check Tools') {
+            steps {
+                bat 'echo Checking Java and Maven versions...'
+                bat 'java -version'
+                bat 'mvn -version'
+            }
+        }
+
         stage('Checkout') {
             steps {
                 git branch: 'main', url: 'https://github.com/trishaboda/devopsmavenapp.git'
@@ -15,7 +23,7 @@ pipeline {
 
         stage('Build') {
             steps {
-                sh 'mvn clean install'
+                bat 'mvn clean install'
             }
         }
 
